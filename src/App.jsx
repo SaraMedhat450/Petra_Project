@@ -25,6 +25,7 @@ import PayoutC from "./components/CustomerComponents/Payout";
 import CustomerManagementC from "./components/CustomerComponents/CustomerManagement";
 import System from "./components/CustomerComponents/System";
 import Cashback from "./components/CustomerComponents/Cashback";
+import Main from "./components/CustomerComponents/Main";
 
 export default function App() {
   return (
@@ -33,7 +34,7 @@ export default function App() {
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/customer" element={<Customer />}>
-              <Route path="main" element={<ProviderMain />} />
+              <Route path="main" element={<Main />} />
               <Route path="booking" element={<Booking />} />
               <Route path="category" element={<Category />} />
               <Route path="points" element={<Points />} />

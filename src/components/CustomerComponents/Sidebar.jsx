@@ -46,12 +46,12 @@ export default function Sidebar() {
         </div>
 
         <Link
-          to="/customer/home"
+          to="/customer/main"
           className="flex items-center justify-between px-4 py-2 rounded-md hover:bg-[#64ccc5]"
         >
           <div className="flex items-center gap-3">
             <IoHome className="text-2xl" />
-            <span className="text-base font-medium">Home</span>
+            <span className="text-base font-medium">Main</span>
           </div>
         </Link>
 
