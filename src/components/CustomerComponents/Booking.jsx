@@ -22,10 +22,11 @@ export default function Booking() {
       : bookings.filter((item) => item.status === statusFilter);
 
   return (
-    <div className="p-6">
+    <div className="p-6 font-medium">
       <h2 className="text-xl font-semibold mb-4">Booking List</h2>
 
-      <div className="mb-4">
+      <div className="border border-default">
+        <div className="m-5">
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
@@ -59,15 +60,15 @@ export default function Booking() {
         <tbody>
           {filteredBookings.map((item) => (
             <tr key={item.id} className="border-b relative">
-              <td className="px-6 py-4">{item.id}</td>
-              <td className="px-6 py-4">{item.service}</td>
-              <td className="px-6 py-4">{item.bookingDate}</td>
-              <td className="px-6 py-4">{item.serviceDate}</td>
-              <td className="px-6 py-4">{item.provider}</td>
-              <td className="px-6 py-4">{item.payment}</td>
-              <td className="px-6 py-4">{item.amount}</td>
+              <td className="px-6 py-3">{item.id}</td>
+              <td className="px-6 py-3">{item.service}</td>
+              <td className="px-6 py-3">{item.bookingDate}</td>
+              <td className="px-6 py-3">{item.serviceDate}</td>
+              <td className="px-6 py-3">{item.provider}</td>
+              <td className="px-6 py-3">{item.payment}</td>
+              <td className="px-6 py-3">{item.amount}</td>
 
-              <td className="px-6 py-4">
+              <td className="px-6 py-3">
                 <span
                   className={`px-3 py-1 rounded-full text-xs font-medium
                     ${item.status === "Pending" && "bg-yellow-100 text-yellow-700"}
@@ -140,6 +141,7 @@ export default function Booking() {
             </button>
           </div>
         </div>
+      </div>
 
     </div>
   );
