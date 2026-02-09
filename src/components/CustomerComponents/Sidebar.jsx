@@ -1,6 +1,6 @@
 
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FaCoins,
   FaList,
@@ -13,27 +13,47 @@ import { IoChevronDown, IoChevronUp, IoHome } from "react-icons/io5";
 import { FiLogOut } from "react-icons/fi";
 
 export default function Sidebar() {
-    const navigate = useNavigate();
-    const handleLogout = () => {
+  const navigate = useNavigate();
+  const handleLogout = () => {
     localStorage.clear();
     navigate("/login");
   };
+
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("userData");
+    if (storedUser) {
+      setUserData(JSON.parse(storedUser));
+    }
+  }, []);
+
 
   const [openBooking, setOpenBooking] = useState(false);
 
   return (
     <aside className="w-72 bg-[#04364A] text-white p-4 min-h-screen flex flex-col">
       {/* User Info */}
-      <div className="flex items-center gap-3 px-3 py-4 border-b border-white/20">
-        <FaUserCircle className="text-5xl text-gray-300" />
-        <div>
-          <div className="text-sm font-medium">customer@gmail.com</div>
-          <div className="text-lg font-semibold mt-1">Customer</div>
+      {userData && (
+        <div className="p-4 border-b border-brand-primary/20 flex items-center text-center">
+          <div className="w-10 h-10 me-3 rounded-full bg-brand-light mb-2 flex items-center justify-center overflow-hidden border-2 border-brand-secondary">
+            {userData.image ? (
+              <img src={userData.image} alt="User Profile" className="w-full h-full object-cover" />
+            ) : (
+              <span className="text-2xl text-brand-primary font-bold">{userData.name?.[0]?.toUpperCase() || "U"}</span>
+            )}
+          </div>
+          <div className="flex flex-col">
+            <h3 className="text-white font-medium text-sm truncate w-full">{userData.email || "No Email"}</h3>
+            <span className="text-xs text-brand-secondary px-2 py-0.5 bg-brand-primary/20 rounded mt-1 capitalize">
+              {localStorage.getItem("userRole") || "customer"}
+            </span>
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="flex-1 flex flex-col gap-2 mt-4 text-base">
-         <div
+        <div
           className="flex items-center justify-between px-4 py-2 rounded-md "
         >
           <div className="flex items-center gap-3">
@@ -131,14 +151,14 @@ export default function Sidebar() {
       </div>
 
       <div className="p-4 border-t border-brand-primary/20">
-              <button
-                onClick={handleLogout}
-                className="flex items-center w-full py-2 text-body rounded-base text-white hover:bg-red-500/20 hover:text-red-300 transition-colors group"
-              >
-                <i className="fa-solid fa-arrow-right-from-bracket group-hover:text-red-400"></i>
-                <span className="flex-1 ms-3 whitespace-nowrap">Logout</span>
-              </button>
-            </div>
+        <button
+          onClick={handleLogout}
+          className="flex items-center w-full py-2 text-body rounded-base text-white hover:bg-red-500/20 hover:text-red-300 transition-colors group"
+        >
+          <i className="fa-solid fa-arrow-right-from-bracket group-hover:text-red-400"></i>
+          <span className="flex-1 ms-3 whitespace-nowrap">Logout</span>
+        </button>
+      </div>
     </aside>
   );
 }

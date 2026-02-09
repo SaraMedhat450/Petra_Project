@@ -46,26 +46,38 @@ export default function Provider() {
 
         <aside id="default-sidebar" className="fixed left-0 z-40 w-70 h-screen transition-transform -translate-x-full sm:translate-x-0 text-white bg-brand-dark top-0" aria-label="Sidebar">
           <div className="flex flex-col h-full bg-neutral-primary-soft border-e border-default">
-            
+
             {/* User Profile Section */}
             {userData && (
-              <div className="p-4 border-b border-brand-primary/20 flex flex-col items-center text-center">
-                <div className="w-16 h-16 rounded-full bg-brand-light mb-2 flex items-center justify-center overflow-hidden border-2 border-brand-secondary">
+              <div className="p-4 border-b border-brand-primary/20 flex items-center text-center">
+                <div className="w-10 h-10 me-3 rounded-full bg-brand-light mb-2 flex items-center justify-center overflow-hidden border-2 border-brand-secondary">
                   {userData.image ? (
                     <img src={userData.image} alt="User Profile" className="w-full h-full object-cover" />
                   ) : (
                     <span className="text-2xl text-brand-primary font-bold">{userData.name?.[0]?.toUpperCase() || "U"}</span>
                   )}
                 </div>
-                <h3 className="text-white font-medium text-sm truncate w-full">{userData.email || "No Email"}</h3>
-                <span className="text-xs text-brand-secondary px-2 py-0.5 bg-brand-primary/20 rounded mt-1 capitalize">
-                  {localStorage.getItem("userRole") || "Provider"}
-                </span>
+                <div className="flex flex-col">
+                  <h3 className="text-white font-medium text-sm truncate w-full">{userData.email || "No Email"}</h3>
+                  <span className="text-xs text-brand-secondary px-2 py-0.5 bg-brand-primary/20 rounded mt-1 capitalize">
+                    {localStorage.getItem("userRole") || "Provider"}
+                  </span>
+                </div>
               </div>
             )}
-            
+
             <div className="flex-1 overflow-y-auto px-3 py-4 no-scrollbar pb-10">
               <ul className="space-y-2 text-sm font-normal">
+
+                <li className="flex items-center text-body justify-between px-4 py-2 rounded-md ">
+                  <div className="flex items-center gap-3">
+                    <FaList className="text-lg" />
+                    <span className="text-base font-medium">Points</span>
+                  </div>
+                  <span className="bg-red-500 text-white text-sm px-2 py-0.5 rounded-full font-medium">
+                    545 LE
+                  </span>
+                </li>
 
                 <li>
                   <Link to='/provider/main' className="flex items-center px-2 py-1.5 text-body rounded-base hover:bg-brand-primary hover:text-white focus:bg-brand-primary group">
@@ -74,16 +86,10 @@ export default function Provider() {
                   </Link>
                 </li>
 
-                <li>
-                  <Link to='/provider/points' className="flex items-center px-2 py-1.5 text-body rounded-base hover:bg-brand-primary hover:text-white focus:bg-brand-primary group">
-                    <FaList className="text-lg"/>
-                    <span className="flex-1 ms-3 whitespace-nowrap">Points</span>
-                  </Link>
-                </li>
 
                 <li>
                   <Link to='/provider/categoryManagement' className="flex items-center px-2 py-1.5 text-body rounded-base hover:bg-brand-primary hover:text-white focus:bg-brand-primary group">
-                    <BiCategoryAlt className="text-lg"/>
+                    <BiCategoryAlt className="text-lg" />
                     <span className="flex-1 ms-3 whitespace-nowrap">Category Management</span>
                   </Link>
                 </li>
@@ -94,7 +100,7 @@ export default function Provider() {
                       onClick={() => toggleMenu("service")}
                       className="flex items-center w-full px-2 py-1.5 text-body rounded-base hover:bg-brand-primary hover:text-white transition-colors"
                     >
-                      <GrServices className="text-lg"/>
+                      <GrServices className="text-lg" />
                       <span className="flex-1 ms-3 text-left">Service Management</span>
 
                       <i
@@ -129,42 +135,42 @@ export default function Provider() {
 
                 <li>
                   <Link to='/provider/bookingManagement' className="flex items-center px-2 py-1.5 text-body rounded-base hover:bg-brand-primary hover:text-white focus:bg-brand-primary group">
-                    <MdOutlineEventAvailable className="text-lg"/>
+                    <MdOutlineEventAvailable className="text-lg" />
                     <span className="flex-1 ms-3 whitespace-nowrap">Booking Management</span>
                   </Link>
                 </li>
 
                 <li>
                   <Link to='/provider/providersManagement' className="flex items-center px-2 py-1.5 text-body rounded-base hover:bg-brand-primary hover:text-white focus:bg-brand-primary group">
-                    <FaUsersCog className="text-lg"/>
+                    <FaUsersCog className="text-lg" />
                     <span className="flex-1 ms-3 whitespace-nowrap">Providers Management</span>
                   </Link>
                 </li>
 
                 <li>
                   <Link to='/provider/payout' className="flex items-center px-2 py-1.5 text-body rounded-base hover:bg-brand-primary hover:text-white focus:bg-brand-primary group">
-                    <FaMoneyBillWave className="text-lg"/>
+                    <FaMoneyBillWave className="text-lg" />
                     <span className="flex-1 ms-3 whitespace-nowrap">Payout</span>
                   </Link>
                 </li>
 
                 <li>
                   <Link to='/provider/customerManagement' className="flex items-center px-2 py-1.5 text-body rounded-base hover:bg-brand-primary hover:text-white focus:bg-brand-primary group">
-                    <MdManageAccounts className="text-lg"/>
+                    <MdManageAccounts className="text-lg" />
                     <span className="flex-1 ms-3 whitespace-nowrap">Customer Management</span>
                   </Link>
                 </li>
 
                 <li>
                   <Link to='/provider/systemUsers' className="flex items-center px-2 py-1.5 text-body rounded-base hover:bg-brand-primary hover:text-white focus:bg-brand-primary group">
-                    <MdAdminPanelSettings className="text-lg"/>
+                    <MdAdminPanelSettings className="text-lg" />
                     <span className="flex-1 ms-3 whitespace-nowrap">System Users</span>
                   </Link>
                 </li>
 
                 <li className="mb-2">
                   <Link to='/provider/cashbackManagement' className="flex items-center px-2 py-1.5 text-body rounded-base hover:bg-brand-primary hover:text-white focus:bg-brand-primary group">
-                    <FaCoins className="text-lg"/>
+                    <FaCoins className="text-lg" />
                     <span className="flex-1 ms-3 whitespace-nowrap">Points & Cashback Management</span>
                   </Link>
                 </li>
