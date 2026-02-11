@@ -23,7 +23,7 @@ export default function Booking() {
 
   return (
     <div className="p-6 font-medium">
-      <h2 className="text-xl font-semibold mb-4">Booking List</h2>
+      <h2 className="text-xl font-semibold mb-4 text-sky-900">Booking List</h2>
 
       <div className="border border-default">
         <div className="m-5">

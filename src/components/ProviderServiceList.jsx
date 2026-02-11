@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import 'flowbite';
 import { initFlowbite } from "flowbite";
+import { Link } from "react-router-dom";
 
 export default function ProviderServiceList() {
 
@@ -31,13 +32,13 @@ export default function ProviderServiceList() {
   };
 
   return (
-    <div className="mx-8 mt-8 ">
+    <div className="m-5 ">
 
-      <div className="p-5 flex justify-between">
-        <div className="text-xl font-bold">Services List</div>
+      <div className="pb-5 flex justify-between">
+        <div className="text-xl font-bold text-sky-900">Services List</div>
 
-        <button type="button" className="text-white bg-brand-primary hover:bg-brand-primary/90 focus:ring-4 focus:ring-brand-primary/50 font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none transition-colors">
-          + New Service
+        <button type="button" className="text-white bg-sky-900 hover:bg-brand-primary/90 focus:ring-4 focus:ring-brand-primary/50 font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none transition-colors">
+          <Link to="/provider/addService">+ New Service</Link>
         </button>
 
       </div>
@@ -82,7 +83,7 @@ export default function ProviderServiceList() {
                 <svg className="w-4 h-4 text-body" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" /></svg>
               </div>
               <input type="search" id="search" className="block w-full p-2 ps-9 bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-xl focus:ring-brand focus:border-brand shadow-xs placeholder:text-body" placeholder="Search" required />
-              <button type="button" className="absolute end-1.5 top-1.5 bottom-1.5 text-white bg-brand-primary hover:bg-brand-primary/90 focus:ring-4 focus:ring-brand-primary/50 font-medium rounded-lg text-xs px-3 focus:outline-none transition-colors">Search</button>
+              <button type="button" className="absolute end-1.5 top-1.5 bottom-1.5 text-white bg-sky-900 hover:bg-brand-primary/90 focus:ring-4 focus:ring-brand-primary/50 font-medium rounded-lg text-xs px-3 focus:outline-none transition-colors">Search</button>
             </div>
           </form>
 
@@ -117,7 +118,7 @@ export default function ProviderServiceList() {
                       checked={service.active}
                       onChange={() => toggleService(service.id)}
                     />
-                    <div className="relative w-9 h-5 bg-gray-300 rounded-full peer-checked:bg-green-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-full"></div>
+                    <div className="relative w-9 h-5 bg-gray-300 rounded-full peer-checked:bg-green-700 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-full"></div>
                   </label>
                 </td>
                 <td className="px-2 py-3">
