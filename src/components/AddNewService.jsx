@@ -88,7 +88,7 @@ export default function AddNewService() {
         console.error("Error data:", error.response.data);
         console.error("Error status:", error.response.status);
       }
-      toast.error(error.response?.data?.message || 'Failed to add service. Please try again.');
+      toast.error('Failed to add service. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -207,7 +207,7 @@ export default function AddNewService() {
               type="text"
               id="com-value"
               value={commission}
-              disabled={!category || !subCategory || !serviceName}
+              disabled={true}
               onChange={(e) => setCommission(e.target.value)}
               className="disabled:bg-gray-200 border border-default-medium border-gray-300 text-heading text-sm rounded focus:ring-brand focus:border-brand block w-full px-3 py-2 shadow-xs placeholder:text-body"
               placeholder="Commission value"
@@ -453,7 +453,7 @@ export default function AddNewService() {
         <button 
           onClick={handleSave}
           className='rounded px-6 py-2 bg-sky-900 hover:bg-sky-900/80 disabled:opacity-50 text-white absolute bottom-0 right-0 mb-5 me-8 flex items-center gap-2'
-          disabled={loading || !category || !subCategory || !serviceName || !commission || !pricingType || !price || !state}
+          disabled={loading || !category || !subCategory || !serviceName || !pricingType || !price || !description}
         >
           {loading ? (
             <span className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>

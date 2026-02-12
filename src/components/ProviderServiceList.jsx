@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { serviceService } from "../services";
+import { serviceService, categoryService } from "../services";
 import "flowbite";
 import { initFlowbite } from "flowbite";
 import { Link } from "react-router-dom";
@@ -11,6 +11,8 @@ export default function ProviderServiceList() {
   const [providerInfo, setProviderInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [categories, setCategories] = useState([]);
+  const [serviceTitles, setServiceTitles] = useState([]);
 
   useEffect(() => {
     initFlowbite();
@@ -23,11 +25,23 @@ export default function ProviderServiceList() {
   useEffect(() => {
     const fetchProviderData = async () => {
       try {
-        const data = await serviceService.getProviderData();
-        console.log("Provider Data:", data);
+        const [providerData, catRes, titleRes] = await Promise.all([
+          serviceService.getProviderData(),
+          categoryService.getAllCategories(),
+          categoryService.getServiceTitles()
+        ]);
 
-        setServices(data.services || []);
-        setProviderInfo(data.provider || null);
+        console.log("Provider Data:", providerData);
+
+        setServices(providerData.services || []);
+        setProviderInfo(providerData.provider || null);
+        
+        const catList = Array.isArray(catRes.data) ? catRes.data : (Array.isArray(catRes) ? catRes : []);
+        setCategories(catList);
+        
+        const titleList = Array.isArray(titleRes.data) ? titleRes.data : (Array.isArray(titleRes) ? titleRes : []);
+        setServiceTitles(titleList);
+        
         setLoading(false);
       } catch (err) {
         console.error(err);
@@ -98,12 +112,18 @@ export default function ProviderServiceList() {
                 >
                   {/* Service Title */}
                   <td className="px-2 py-3">
-                    {service.service_title_id}
+                    {(() => {
+                      const title = serviceTitles.find(t => t.id === service.service_title_id);
+                      return title ? (title.service_title || title.name) : service.service_title_id;
+                    })()}
                   </td>
 
                   {/* Category */}
                   <td className="px-2 py-3">
-                    {service.categoryId}
+                    {(() => {
+                      const cat = categories.find(c => c.id === service.categoryId);
+                      return cat ? (cat.category_name || cat.name) : service.categoryId;
+                    })()}
                   </td>
 
                   {/* Pricing */}

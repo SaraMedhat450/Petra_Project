@@ -58,7 +58,7 @@ const Login = () => {
     const data = await res.json();
 
     if (!res.ok) {
-      setErrors({ api: data.message || "Login failed" });
+      setErrors({ api: "Invalid email or password" });
       return;
     }
 

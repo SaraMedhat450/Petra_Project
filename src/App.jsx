@@ -31,7 +31,7 @@ import Main from "./components/CustomerComponents/Main";
 export default function App() {
   return (
     <BrowserRouter>
-      <Toaster position="top-right" />
+      <Toaster position="top-center" />
       <Routes>
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />
