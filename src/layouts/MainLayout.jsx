@@ -6,7 +6,6 @@ import Customer from '../pages/Customer';
 export default function MainLayout() {
   return (
     <>
-      {!<Customer /> && <Navbar />}
       <Outlet />
     </>
   );

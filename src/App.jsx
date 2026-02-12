@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 import Customer from "./pages/Customer";
 import Provider from "./pages/Provider";
 import Navbar from "./components/Navbar";
@@ -30,6 +31,7 @@ import Main from "./components/CustomerComponents/Main";
 export default function App() {
   return (
     <BrowserRouter>
+      <Toaster position="top-right" />
       <Routes>
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />

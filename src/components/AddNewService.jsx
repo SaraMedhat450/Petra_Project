@@ -1,10 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom';
+import { serviceService, categoryService } from '../services';
+import toast from 'react-hot-toast';
 import TimePicker from "react-time-picker";
 import "react-time-picker/dist/TimePicker.css";
 import "react-clock/dist/Clock.css";
 
 
 export default function AddNewService() {
+  const navigate = useNavigate();
 
   const [ServiceImage, setServiceImage] = useState("Browser");
 
@@ -27,6 +31,68 @@ export default function AddNewService() {
   const [scheduleSlots, setScheduleSlots] = useState([]);
 
   const [serviceGallery, setServiceGallery] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [subCategories, setSubCategories] = useState([]);
+  const [serviceTitles, setServiceTitles] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const catRes = await categoryService.getAllCategories();
+        setCategories(Array.isArray(catRes.data) ? catRes.data : Array.isArray(catRes) ? catRes : []);
+
+        const subCatRes = await categoryService.getSubCategories();
+        setSubCategories(Array.isArray(subCatRes.data) ? subCatRes.data : Array.isArray(subCatRes) ? subCatRes : []);
+
+        const titleRes = await categoryService.getServiceTitles();
+        setServiceTitles(Array.isArray(titleRes.data) ? titleRes.data : Array.isArray(titleRes) ? titleRes : []);
+      } catch (error) {
+        console.error("Failed to fetch initial data:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const handleSave = async () => {
+    setLoading(true);
+    try {
+      const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+      
+      const serviceData = {
+        categoryId: parseInt(category) || 1,
+        subcategoryId: parseInt(subCategory) || 1,
+        service_title_id: parseInt(serviceName) || 1,
+        userid: parseInt(userData.id) || 28,
+        price_Type: pricingType || "Hourly",
+        price: parseFloat(price) || 0,
+        max_price: parseFloat(price) * 1.5 || 300, 
+        description: description || "Service description",
+        images: serviceGallery.length > 0 ? serviceGallery[0].name : "ac_service.jpg"
+      };
+
+      console.log("Sending service data:", serviceData);
+
+      const response = await serviceService.createService(serviceData);
+      console.log("API Response:", response);
+      
+      toast.success('Service added successfully!');
+      
+      setTimeout(() => {
+        navigate("/provider/serviceList");
+      }, 1500);
+      
+    } catch (error) {
+      console.error("Error saving service:", error);
+      if (error.response) {
+        console.error("Error data:", error.response.data);
+        console.error("Error status:", error.response.status);
+      }
+      toast.error(error.response?.data?.message || 'Failed to add service. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
 
   const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -41,33 +107,41 @@ export default function AddNewService() {
       return `${h}:${minutes} ${ampm}`;
     };
 
-    const newTime = `${formatTime(startTime)} - ${formatTime(endTime)}`;
+    const newTimeSlot = `${formatTime(startTime)} - ${formatTime(endTime)}`;
 
-    let newSlots;
-    const existingIndex = scheduleSlots.findIndex(s => s.day === selectedDay);
-    if (existingIndex > -1) {
-      newSlots = [...scheduleSlots];
-      newSlots[existingIndex] = { ...newSlots[existingIndex], time: newTime };
+    // 1. Update scheduleSlots (internal state for day-grid and tracking)
+    let updatedSlots = [...scheduleSlots];
+    const existingSlotIndex = updatedSlots.findIndex(s => s.day === selectedDay);
+
+    if (existingSlotIndex > -1) {
+      // If day exists, add new time slot if not already there
+      if (!updatedSlots[existingSlotIndex].times.includes(newTimeSlot)) {
+        updatedSlots[existingSlotIndex] = {
+          ...updatedSlots[existingSlotIndex],
+          times: [...updatedSlots[existingSlotIndex].times, newTimeSlot]
+        };
+      }
     } else {
-      newSlots = [...scheduleSlots, { day: selectedDay, time: newTime }];
+      // If day doesn't exist, create it with an array of times
+      updatedSlots.push({ day: selectedDay, times: [newTimeSlot] });
     }
     
-    setScheduleSlots(newSlots);
+    // Sort slots by day of week
+    updatedSlots.sort((a, b) => days.indexOf(a.day) - days.indexOf(b.day));
+    setScheduleSlots(updatedSlots);
 
-    const timingsSummary = newSlots
-      .sort((a,b) => days.indexOf(a.day) - days.indexOf(b.day))
-      .map(s => `${s.day} (${s.time})`).join(', ');
-
-    const newService = {
+    // 2. Generate addedServices cards (one card per day)
+    const newCards = updatedSlots.map(slot => ({
+      day: slot.day,
       name: serviceName || "Select Service",
       price: price ? `${price} Le` : "0 Le",
       commission: commission ? `${commission}%` : "0%",
-      timings: timingsSummary,
+      timings: slot.times.join(', '),
       category: category,
       subCategory: subCategory
-    };
+    }));
 
-    setAddedServices([newService]);
+    setAddedServices(newCards);
   };
 
   return (
@@ -90,10 +164,10 @@ export default function AddNewService() {
               className="block w-full px-3 py-2 bg-neutral-secondary-medium border border-default-medium border-gray-300 text-heading text-sm rounded focus:ring-brand focus:border-brand shadow-xs placeholder:text-body"
             >
               <option value="">Select Category</option>
-              <option value="c1">Category 1</option>
-              <option value="c2">Category 2</option>
-              <option value="c3">Category 3</option>
-              <option value="c4">Category 4</option>
+              {categories.map(cat => (
+                <option key={cat.id} value={cat.id}>{cat.category_name || cat.name}</option>
+              ))}
+
             </select>
           </div>
 
@@ -106,10 +180,9 @@ export default function AddNewService() {
               className="block w-full px-3 py-2 bg-neutral-secondary-medium border border-default-medium border-gray-300 text-heading text-sm rounded focus:ring-brand focus:border-brand shadow-xs placeholder:text-body"
             >
               <option value="">Select Sub-Category</option>
-              <option value="c1">Category 1</option>
-              <option value="c2">Category 2</option>
-              <option value="c3">Category 3</option>
-              <option value="c4">Category 4</option>
+              {subCategories.map(sub => (
+                <option key={sub.id} value={sub.id}>{sub.subcategory_name || sub.name}</option>
+              ))}
             </select>
           </div>
 
@@ -122,10 +195,9 @@ export default function AddNewService() {
               className="block w-full px-3 py-2 bg-neutral-secondary-medium border border-default-medium border-gray-300 text-heading text-sm rounded focus:ring-brand focus:border-brand shadow-xs placeholder:text-body"
             >
               <option value="">Select Service</option>
-              <option value="s1">Service 1</option>
-              <option value="s2">Service 2</option>
-              <option value="s3">Service 3</option>
-              <option value="s4">Service 4</option>
+              {serviceTitles.map(title => (
+                <option key={title.id} value={title.id}>{title.service_title || title.name}</option>
+              ))}
             </select>
           </div>
 
@@ -152,10 +224,9 @@ export default function AddNewService() {
               className="block w-full px-3 py-2 bg-neutral-secondary-medium border border-default-medium border-gray-300 text-heading text-sm rounded focus:ring-brand focus:border-brand shadow-xs placeholder:text-body"
             >
               <option value="">Pricing Type</option>
-              <option value="t1">Type 1</option>
-              <option value="t2">Type 2</option>
-              <option value="t3">Type 3</option>
-              <option value="t4">Type 4</option>
+              <option value="Hourly">Hourly</option>
+              <option value="Fixed">Fixed</option>
+              <option value="Free">Free</option>
             </select>
           </div>
 
@@ -212,7 +283,7 @@ export default function AddNewService() {
 
               <label
                 htmlFor="image"
-                className="px-4 py-2 bg-sky-900 hover:bg-brand-primary/90 text-white cursor-pointer rounded-e"
+                className="px-4 py-2 bg-sky-900 hover:bg-sky-900/80 text-white cursor-pointer rounded-e"
               >
                 Upload
               </label>
@@ -257,8 +328,8 @@ export default function AddNewService() {
                     >
                       <span className={`text-sm font-bold block mb-1 ${isSelected || slot ? 'text-sky-900' : 'text-gray-500'}`}>{day}</span>
                       {slot ? (
-                        <span className="text-[11px] font-semibold text-sky-800 bg-sky-100 px-2 py-0.5 rounded-full">
-                          {slot.time}
+                        <span className="text-[11px] font-semibold text-sky-800 bg-sky-100 px-2 py-0.5 rounded-full truncate max-w-full">
+                          {slot.times.length > 1 ? `${slot.times.length} Slots` : slot.times[0]}
                         </span>
                       ) : (
                         <span className="text-[10px] text-gray-400">Off</span>
@@ -296,7 +367,7 @@ export default function AddNewService() {
                 
                 <button 
                   onClick={handleAddSchedule} 
-                  className='px-12 py-3 bg-sky-900 hover:bg-brand-primary/90 text-white rounded font-bold uppercase text-sm transition-all shadow-md active:scale-95'
+                  className='px-12 py-3 bg-sky-900 hover:bg-sky-900/80 text-white rounded font-bold uppercase text-sm transition-all shadow-md active:scale-95'
                 >
                   Add
                 </button>
@@ -313,9 +384,14 @@ export default function AddNewService() {
                       }}><i className="fa-solid fa-trash-can text-xs"></i></button>
                     </div>
                     <div className='space-y-2'>
-                      <div className="flex items-center gap-2 mb-2">
-                        <div className="w-2 h-2 rounded-full bg-sky-600"></div>
-                        <h4 className="font-bold text-sky-900">{service.name}</h4>
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full bg-sky-600"></div>
+                          <h4 className="font-bold text-sky-900">{service.name}</h4>
+                        </div>
+                        <span className="text-[10px] font-black uppercase bg-sky-900 text-white px-2 py-0.5 rounded">
+                          {service.day}
+                        </span>
                       </div>
                       <div className='grid grid-cols-2 gap-x-4 gap-y-1 text-sm font-medium text-sky-900/80'>
                         <p><span className='opacity-60'>Price: </span><span className='font-bold'>{service.price}</span></p>
@@ -323,7 +399,13 @@ export default function AddNewService() {
                       </div>
                       <div className="pt-2 border-t border-sky-200/50 mt-2">
                          <p className="text-[10px] uppercase font-bold opacity-60 mb-1">Schedule</p>
-                         <p className="text-xs font-semibold leading-relaxed">{service.timings}</p>
+                         <div className="flex flex-wrap gap-1">
+                            {service.timings.split(', ').map((time, tIdx) => (
+                              <span key={tIdx} className="text-[10px] font-bold text-sky-700 bg-white border border-sky-100 px-2 py-0.5 rounded shadow-sm">
+                                {time}
+                              </span>
+                            ))}
+                         </div>
                       </div>
                     </div>
                   </div>
@@ -360,7 +442,7 @@ export default function AddNewService() {
 
           <label
             htmlFor="gallery"
-            className="px-4 py-2 bg-sky-900 hover:bg-brand-primary/90 text-white cursor-pointer rounded-e"
+            className="px-4 py-2 bg-sky-900 hover:bg-sky-900/80 text-white cursor-pointer rounded-e"
           >
             Upload
           </label>
@@ -368,9 +450,18 @@ export default function AddNewService() {
         </div>
 
 
-        <button className='rounded px-6 py-2 bg-sky-900 hover:bg-brand-primary/90 disabled:opacity-50  text-white absolute bottom-0 right-0 mb-5 me-8'
-        disabled={!category || !subCategory || !serviceName || !commission || !pricingType || !price || !state || !serviceGallery || !description || !serviceGallery}
-        ><i class="fa-solid fa-floppy-disk"></i> Save</button>
+        <button 
+          onClick={handleSave}
+          className='rounded px-6 py-2 bg-sky-900 hover:bg-sky-900/80 disabled:opacity-50 text-white absolute bottom-0 right-0 mb-5 me-8 flex items-center gap-2'
+          disabled={loading || !category || !subCategory || !serviceName || !commission || !pricingType || !price || !state}
+        >
+          {loading ? (
+            <span className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>
+          ) : (
+            <i className="fa-solid fa-floppy-disk"></i>
+          )}
+          {loading ? 'Saving...' : 'Save'}
+        </button>
       </div>
     </>
   )

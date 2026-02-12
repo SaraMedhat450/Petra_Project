@@ -11,14 +11,21 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.1.0",
+    "@hookform/resolvers": "^5.2.2",
+    "@ngrok/ngrok": "^1.7.0",
     "axios": "^1.13.5",
+    "express": "^5.2.1",
     "flowbite": "^4.0.1",
     "lucide-react": "^0.563.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-helmet": "^6.1.0",
+    "react-hook-form": "^7.71.1",
+    "react-hot-toast": "^2.6.0",
     "react-icons": "^5.5.0",
     "react-router-dom": "^7.13.0",
-    "react-time-picker": "^8.0.2"
+    "react-time-picker": "^8.0.2",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
