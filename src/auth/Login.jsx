@@ -129,14 +129,12 @@ const Login = () => {
                 <label className="block text-sm font-bold text-[#04364A]  tracking-wide">
                   Password
                 </label>
-                <Link to="/forgot-password" size="sm" className="text-xs font-bold text-[#176B87] hover:text-[#64CCC5] transition-colors">
-                  Forgot Password?
-                </Link>
+                
               </div>
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
-                  placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                  placeholder="••••••••"
                   value={formData.password}
                   onChange={(e) => {
                     setFormData({ ...formData, password: e.target.value });
@@ -147,13 +145,7 @@ const Login = () => {
                     errors.password ? 'border-red-500' : 'border-[#64CCC5]/30'
                   } rounded-xl focus:ring-2 focus:ring-[#64CCC5] focus:border-[#64CCC5] outline-none transition-all bg-white/50 placeholder:text-[#176B87]/40 pr-12`}
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-[#176B87] hover:text-[#64CCC5] transition-colors"
-                >
-                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                </button>
+                
               </div>
               {errors.password && (
                 <p className="mt-1 text-sm text-red-500 font-medium">{errors.password}</p>
