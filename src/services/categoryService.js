@@ -5,11 +5,14 @@ const API_BASE_URL = 'https://eeriest-asymptotically-sherie.ngrok-free.dev/api';
 const categoryService = {
     getAllCategories: async () => {
         try {
-            const response = await axios.get(`${API_BASE_URL}/category`, {
-                headers: {
-                    'ngrok-skip-browser-warning': 'true',
-                }
-            });
+            const token = localStorage.getItem("token");
+            const headers = {
+                'ngrok-skip-browser-warning': 'true',
+            };
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+            }
+            const response = await axios.get(`${API_BASE_URL}/category`, { headers });
             return response.data;
         } catch (error) {
             console.error('Error fetching categories:', error);
@@ -19,11 +22,14 @@ const categoryService = {
 
     getServiceTitles: async () => {
         try {
-            const response = await axios.get(`${API_BASE_URL}/service_title`, {
-                headers: {
-                    'ngrok-skip-browser-warning': 'true',
-                }
-            });
+            const token = localStorage.getItem("token");
+            const headers = {
+                'ngrok-skip-browser-warning': 'true',
+            };
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+            }
+            const response = await axios.get(`${API_BASE_URL}/service_title`, { headers });
             return response.data;
         } catch (error) {
             console.error('Error fetching service titles:', error);
@@ -33,11 +39,14 @@ const categoryService = {
 
     getSubCategories: async () => {
         try {
-            const response = await axios.get(`${API_BASE_URL}/subcategory`, {
-                headers: {
-                    'ngrok-skip-browser-warning': 'true',
-                }
-            });
+            const token = localStorage.getItem("token");
+            const headers = {
+                'ngrok-skip-browser-warning': 'true',
+            };
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+            }
+            const response = await axios.get(`${API_BASE_URL}/subcategory`, { headers });
             return response.data;
         } catch (error) {
             console.error('Error fetching subcategories:', error);

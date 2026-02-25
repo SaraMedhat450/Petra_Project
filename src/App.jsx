@@ -62,8 +62,21 @@ export default function App() {
           <Route path="systemUsers" element={<SystemUsers />} />
           <Route path="cashbackManagement" element={<CashbackManagement />} />
           <Route path="addService" element={<AddNewService />} />
+          <Route path="editService/:id" element={<AddNewService />} />
         </Route>
       </Routes>
     </BrowserRouter>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
