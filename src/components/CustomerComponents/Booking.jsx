@@ -58,7 +58,7 @@ export default function Booking() {
 
         <tbody>
           {filteredBookings.map((item) => (
-            <tr key={item.id} className="border-b relative">
+            <tr key={item.id} className="border-b relative font-thin">
               <td className="px-6 py-4">{item.id}</td>
               <td className="px-6 py-4">{item.service}</td>
               <td className="px-6 py-4">{item.bookingDate}</td>
