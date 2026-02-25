@@ -212,7 +212,7 @@ export default function ProviderServiceList() {
                   <th className="px-2 py-3 font-semibold text-center w-24">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200 font-thin">
+              <tbody className="divide-y divide-gray-200 font-sm">
                 {currentEntries.map((service, index) => (
                   <tr key={service.id} className="hover:bg-gray-50 transition-colors ">
                     <td className="px-2 py-3 text-center">

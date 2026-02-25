@@ -59,7 +59,7 @@ export default function Booking() {
 
         <tbody>
           {filteredBookings.map((item) => (
-            <tr key={item.id} className="border-b relative">
+            <tr key={item.id} className="border-b relative font-sm">
               <td className="px-6 py-3">{item.id}</td>
               <td className="px-6 py-3">{item.service}</td>
               <td className="px-6 py-3">{item.bookingDate}</td>
@@ -70,7 +70,7 @@ export default function Booking() {
 
               <td className="px-6 py-3">
                 <span
-                  className={`px-3 py-1 rounded-full text-xs font-medium
+                  className={`px-3 py-1 rounded-full text-xs font-medium uppercase
                     ${item.status === "Pending" && "bg-yellow-100 text-yellow-700"}
                     ${item.status === "Done" && "bg-green-100 text-green-700"}
                     ${item.status === "Canceled" && "bg-red-100 text-red-700"}
@@ -85,7 +85,7 @@ export default function Booking() {
                   onClick={() =>
                     setOpenMenuId(openMenuId === item.id ? null : item.id)
                   }
-                  className="text-gray-700 hover:text-blue-600 flex justify-center w-full"
+                  className="text-gray-700 hover:text-sky-900/70 flex justify-center w-full"
                 >
                   <TbCategoryFilled size={28} />
                 </button>
